@@ -3,7 +3,7 @@ import re
 import sys
 import shutil
 import pandas as pd
-import fitz  # PyMuPDF
+import fitz  
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
@@ -42,9 +42,6 @@ label_map = {
 }
 
 
-
-
-# Preprocessing function
 def preprocess(sentence):
     sentence = str(sentence).lower()
     sentence = sentence.replace('{html}',"")
@@ -58,7 +55,7 @@ def preprocess(sentence):
 
     return " ".join(filtered_words)
 
-# Function to predict category
+
 def predict_category(text):
     inputs = tokenizer_fine_tuned(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
     with torch.no_grad():
@@ -70,7 +67,7 @@ def predict_category(text):
 
 
 
-# Function to extract text from a PDF file
+
 def extract_text_from_pdf(pdf_path):
     extracted_text = ""
     try:
@@ -81,7 +78,7 @@ def extract_text_from_pdf(pdf_path):
         print(f"Error processing {pdf_path}: {e}")
     return extracted_text
 
-# Main function to categorize resumes
+
 def categorize_resumes(directory):
     if not os.path.exists(directory):
         print(f"Directory '{directory}' does not exist.")
@@ -89,43 +86,42 @@ def categorize_resumes(directory):
 
     print(f"Processing files in directory: {directory}")
 
-    # DataFrame to store file names and categories
+   
     categorized_data = []
 
-    # Walk through all directories and subdirectories
     for root, dirs, files in os.walk(directory):
         for filename in files:
             file_path = os.path.join(root, filename)
             print(f"Processing file: {file_path}")
             
-            if filename.endswith(".pdf"):  # Process only PDF files
-                # Extract text from the PDF
+            if filename.endswith(".pdf"):  
+                
                 extracted_text = extract_text_from_pdf(file_path)
                 if not extracted_text:
                     print(f"No text extracted from {filename}. Skipping...")
                     continue
                 
-                # Preprocess the extracted text
+                
                 preprocessed_content = preprocess(extracted_text)
                 
-                # Predict the category
+                
                 category = predict_category(preprocessed_content)
                 print(f"Predicted category for {filename}: {category}")
 
-                # Define category folder path at the base directory
+                
                 category_folder = os.path.join(directory, str(category))
                 if not os.path.exists(category_folder):
                     os.makedirs(category_folder)
 
-                # Move the file to the respective category folder
+               
                 shutil.move(file_path, os.path.join(category_folder, filename))
 
-                # Append the file name and category to the DataFrame
+                
                 categorized_data.append([filename, category])
             else:
                 print(f"Skipping non-PDF file: {filename}")
 
-    # Create a DataFrame and save it as a CSV file
+    
     df = pd.DataFrame(categorized_data, columns=["File Name", "Category"])
     csv_file_path = os.path.join(directory, "categorize_resumes.csv")
     df.to_csv(csv_file_path, index=False)
@@ -133,7 +129,6 @@ def categorize_resumes(directory):
     print(f"Categorization complete. Results saved to {csv_file_path}")
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python script.py <directory>")
         sys.exit(1)
     
     input_directory = sys.argv[1]
