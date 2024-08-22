@@ -19,8 +19,10 @@ Model Development:
 
 I developed a couple of machine learning models for resume classification.
 As developing an NLP text classification model from scratch is a very cumbersome process, I fine-tuned an existing BERT model, specifically DistilBERT, for text classification.
-My whole fine-tuning notebook is available here.
-I stored the saved model in my Google Drive: Download Link.
+My whole fine-tuning notebook is available here. : https://colab.research.google.com/drive/1e1uFBzW4K1qdjfoVc7uCHUPqZD4SyBno
+I stored the saved model in my Google Drive: https://drive.google.com/file/d/1mAl8S_Zc1hrezly6rR463V9CHWyzJQeY/view?usp=sharing                                        
+  
+  
 
 Resume Classification:
 
