@@ -9,9 +9,19 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import torch
 
+
+"""
+First i gather all my resume pdf file in a single folder  name d "full data". then i run this script on this folder . 
+this scrript is taking each resume file frm this folder and make prediction on that particular resume and as the predicted category 
+is the category of the resume . it is saving the resume file in a folder named as the predicted category . 
+example : like a resume file name is 10876132.pdf . this script will make prediction on this and the predicted category is AUTOMOBILE
+then it will create a folder named AUTOMOBILE and save this file in this foldder ,
+"""
+
+
 # Load the tokenizer and model
-tokenizer_fine_tuned = DistilBertTokenizer.from_pretrained(r"D:\All_data_science_project\NLP\fine-tune-2\Task\saved_models")
-model_fine_tuned = DistilBertForSequenceClassification.from_pretrained(r"D:\All_data_science_project\NLP\fine-tune-2\Task\saved_models")
+tokenizer_fine_tuned = DistilBertTokenizer.from_pretrained(r"D:\All_data_science_project\NLP\fine-tune-2\My_New_Saved_Model")
+model_fine_tuned = DistilBertForSequenceClassification.from_pretrained(r"D:\All_data_science_project\NLP\fine-tune-2\My_New_Saved_Model")
 
 
 label_map = {
@@ -98,7 +108,7 @@ def categorize_resumes(directory):
                 
                 extracted_text = extract_text_from_pdf(file_path)
                 if not extracted_text:
-                    print(f"No text extracted from {filename}. Skipping...")
+                    print(f"No text are extracted from {filename}. Skipping...")
                     continue
                 
                 
@@ -119,14 +129,14 @@ def categorize_resumes(directory):
                 
                 categorized_data.append([filename, category])
             else:
-                print(f"Skipping non-PDF file: {filename}")
+                print(f"Skip non-PDF file: {filename}")
 
     
     df = pd.DataFrame(categorized_data, columns=["File Name", "Category"])
     csv_file_path = os.path.join(directory, "categorize_resumes.csv")
     df.to_csv(csv_file_path, index=False)
 
-    print(f"Categorization complete. Results saved to {csv_file_path}")
+    print(f"Categorization is completed. Results are saved to {csv_file_path} !!!!!!!!!")
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(1)
